@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ImagePicker from "@/components/ImagePicker";
 import useScoutName from "@/components/useScoutName";
 import { DISTRICTS } from "@/lib/districts";
+import { HANDOFF_KEY } from "@/lib/handoff";
 
 const EMPTY_ROW = { name: "", name_ml: "", date: "", time: "" };
 
@@ -14,16 +15,32 @@ export default function ScoutPage() {
   const [scout, setScout] = useScoutName();
   const [step, setStep] = useState("upload"); // upload → reading → review → saving
   const [error, setError] = useState("");
+  const [fromVisitor, setFromVisitor] = useState(false);
+
+  // A visitor shared a poster from /translate: load it and start reading straight away.
+  useEffect(() => {
+    let saved = null;
+    try {
+      saved = JSON.parse(sessionStorage.getItem(HANDOFF_KEY) || "null");
+      sessionStorage.removeItem(HANDOFF_KEY);
+    } catch {}
+    if (saved?.poster) {
+      setPoster(saved.poster);
+      setFromVisitor(true);
+      read(saved.poster);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const set = (k) => (e) => setDraft((d) => ({ ...d, [k]: e.target.value }));
   const setRow = (i, k) => (e) =>
     setDraft((d) => ({ ...d, theyyams: d.theyyams.map((t, j) => (j === i ? { ...t, [k]: e.target.value } : t)) }));
 
-  async function read() {
+  async function read(img = poster) {
     setStep("reading");
     setError("");
     try {
-      const res = await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ poster }) });
+      const res = await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ poster: img }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       if (data.is_event_poster === false) throw new Error("This doesn't look like a festival poster. Try another photo.");
@@ -56,15 +73,13 @@ export default function ScoutPage() {
 
   return (
     <section className="narrow">
-      <p className="eyebrow">Be a Culture Scout</p>
-      <h1>Snap a festival poster</h1>
-      <p className="lead">Photograph a Theyyam or temple festival poster. Gemma reads the Malayalam — you check it — and it goes on the map for the world to find.</p>
 
       {(step === "upload" || step === "reading") && (
         <div className="form">
+          {fromVisitor && <p className="small">🤝 A visitor shared this poster. Gemma is reading it, then please check the details.</p>}
           <ImagePicker value={poster} onChange={setPoster} label="Take / upload poster photo" />
           {error && <p className="error">⚠️ {error}</p>}
-          <button className="btn btn-primary btn-lg" disabled={!poster || step === "reading"} onClick={read}>
+          <button className="btn btn-primary btn-lg" disabled={!poster || step === "reading"} onClick={() => read()}>
             {step === "reading" ? "Gemma is reading the Malayalam… (can take up to a minute)" : "Read poster"}
           </button>
         </div>

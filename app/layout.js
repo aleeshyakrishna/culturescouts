@@ -24,6 +24,7 @@ export default function RootLayout({ children }) {
             <span className="ml brand-ml">തെയ്യം · ഉത്സവം</span>
           </Link>
           <nav>
+            <Link href="/translate">🌐 Read a poster</Link>
             <Link href="/#leaderboard">Top scouts</Link>
             <Link href="/scout" className="btn btn-primary">📸 Scout a poster</Link>
           </nav>

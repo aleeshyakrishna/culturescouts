@@ -60,7 +60,35 @@ main { padding: 0 clamp(16px, 4vw, 48px) 64px; max-width: 1180px; margin: 0 auto
 .link { background: none; border: none; color: var(--red); cursor: pointer; padding: 0; font: inherit; }
 
 /* Hero */
-.hero { padding: clamp(40px, 8vw, 88px) 0 40px; max-width: 820px; }
+/* Full-bleed dark hero with the fire Theyyam photo on the right */
+.hero {
+  position: relative; margin: 0 calc(50% - 50vw); padding: clamp(48px, 9vw, 112px) clamp(16px, 4vw, 48px) clamp(40px, 6vw, 72px);
+  color: #f7ead2; overflow: hidden; isolation: isolate;
+  background:
+    linear-gradient(90deg, #120905 0%, #120905 38%, rgba(18, 9, 5, .82) 55%, rgba(18, 9, 5, .15) 80%, rgba(18, 9, 5, .35) 100%),
+    var(--hero-img, none) right center / auto 125% no-repeat,
+    radial-gradient(ellipse at 75% 60%, #5a1d0c 0%, #120905 65%);
+}
+.hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 90px; background: linear-gradient(transparent, rgba(18, 9, 5, .6)); z-index: -1; }
+.hero-inner { max-width: 1180px; margin: 0 auto; }
+.hero-inner > * { max-width: 640px; }
+.hero h1 { color: #fff6e6; text-shadow: 0 2px 24px rgba(0, 0, 0, .5); }
+.hero .eyebrow { color: #f0b34a; }
+.hero .accent { color: #f0b34a; }
+.hero .lead { color: #e9d9bd; }
+.hero .btn-ghost { background: rgba(255, 246, 230, .08); color: #fff6e6; border-color: rgba(240, 179, 74, .45); backdrop-filter: blur(4px); }
+.hero .btn-ghost:hover { border-color: #f0b34a; background: rgba(240, 179, 74, .15); }
+.hero .btn-primary { background: #c8401f; box-shadow: 0 6px 24px rgba(200, 64, 31, .45); }
+.hero-stats { list-style: none; padding: 0; margin: 36px 0 0; display: flex; gap: clamp(16px, 4vw, 40px); flex-wrap: wrap; }
+.hero-stats li { display: grid; border-left: 2px solid #f0b34a; padding-left: 12px; }
+.hero-stats strong { font-family: Fraunces, serif; font-size: 1.5rem; color: #fff6e6; }
+.hero-stats span { font-size: .85rem; color: #cdb898; }
+.photo-credit { position: absolute; right: 14px; bottom: 10px; font-size: .72rem; color: rgba(255, 246, 230, .7); letter-spacing: .02em; }
+@media (max-width: 720px) {
+  .hero { background:
+    linear-gradient(180deg, rgba(18, 9, 5, .35) 0%, rgba(18, 9, 5, .72) 45%, rgba(18, 9, 5, .92) 100%),
+    var(--hero-img, none) center 30% / cover no-repeat, #120905; }
+}
 .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 600; color: var(--red); margin: 0 0 12px; }
 .accent { color: var(--green); }
 .hero-ml { font-size: 1.15rem; color: var(--muted); margin: 0 0 16px; }
@@ -175,3 +203,45 @@ textarea { resize: vertical; line-height: 1.7; }
   .event-layout { grid-template-columns: 1fr; }
   .t-row { grid-template-columns: 1fr 1fr; }
 }
+
+/* Visitor poster translation */
+.translate-result { margin-top: 24px; display: grid; gap: 10px; }
+.translate-result h2 { margin: 0; }
+.translate-result h3 { margin: 12px 0 4px; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 4px 0; }
+.facts dt { font-weight: 600; }
+.facts dd { margin: 0; }
+.nowrap { white-space: nowrap; }
+.share-box { margin-top: 12px; padding: 14px; border: 1px dashed var(--line); border-radius: var(--radius); display: grid; gap: 8px; justify-items: start; }
+
+/* Photo banner (scout / translate pages) */
+.photo-banner {
+  position: relative; margin: 24px 0 8px; border-radius: 22px; overflow: hidden; min-height: 240px; display: flex; align-items: flex-end;
+  padding: clamp(20px, 4vw, 36px); color: #fff6e6;
+  background:
+    linear-gradient(90deg, rgba(18, 9, 5, .94) 0%, rgba(18, 9, 5, .7) 50%, rgba(18, 9, 5, .1) 100%),
+    var(--banner-img, none) var(--banner-pos, center) / cover no-repeat,
+    radial-gradient(ellipse at 80% 40%, #6b2410, #120905 70%);
+  box-shadow: 0 18px 40px -18px rgba(60, 20, 5, .55);
+}
+.photo-banner-text { max-width: 520px; }
+.photo-banner h1 { color: #fff6e6; margin-bottom: 8px; }
+.photo-banner .eyebrow { color: #f0b34a; }
+.photo-banner p:not(.eyebrow) { color: #e9d9bd; margin: 0; }
+
+/* Theyyam gallery */
+.gallery-lead { max-width: 640px; margin-top: 0; }
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.gallery-item { margin: 0; position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 3 / 4; background: #120905; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; display: block; }
+.gallery-item:hover img { transform: scale(1.05); }
+.gallery-item figcaption { position: absolute; inset: auto 0 0 0; padding: 28px 12px 10px; font-size: .75rem; color: rgba(255, 246, 230, .85); background: linear-gradient(transparent, rgba(0, 0, 0, .7)); }
+.gallery-item:nth-child(2) { transform: translateY(-18px); }
+@media (max-width: 720px) {
+  .gallery { grid-template-columns: repeat(3, 70%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .gallery-item { scroll-snap-align: start; }
+  .gallery-item:nth-child(2) { transform: none; }
+}
+.banner-wrap { padding-top: 16px; }
+.banner-wrap + .narrow { padding-top: 0; }
+.photo-banner .photo-credit { top: 10px; bottom: auto; }
