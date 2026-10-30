@@ -65,7 +65,7 @@ export default function ScoutPage() {
           <ImagePicker value={poster} onChange={setPoster} label="Take / upload poster photo" />
           {error && <p className="error">⚠️ {error}</p>}
           <button className="btn btn-primary btn-lg" disabled={!poster || step === "reading"} onClick={read}>
-            {step === "reading" ? "Gemma is reading the poster… (10–30s)" : "Read poster"}
+            {step === "reading" ? "Gemma is reading the Malayalam… (can take up to a minute)" : "Read poster"}
           </button>
         </div>
       )}
@@ -94,10 +94,11 @@ export default function ScoutPage() {
             </label>
           </div>
 
-          <div className={`date-box ${draft.date_confidence === "low" ? "warn" : ""}`}>
+          <div className={`date-box ${draft.date_confidence === "low" || draft.is_past ? "warn" : ""}`}>
             <p className="small">
               Date on poster: <strong className="ml">{draft.date_text_ml || "—"}</strong>
               {draft.date_confidence === "low" && <><br />⚠️ Gemma isn't sure about the date (e.g. Malayalam calendar). Please confirm.</>}
+              {draft.is_past && <><br />⚠️ This date has already passed — is this an old poster? Check the year before publishing.</>}
             </p>
             <div className="row">
               <label>Start date<input type="date" value={draft.start_date || ""} onChange={set("start_date")} required /></label>
